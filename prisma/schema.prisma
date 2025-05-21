@@ -1,0 +1,231 @@
+// This is your Prisma schema file
+// Learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL") // Used for migrations
+}
+
+// User profile and settings
+model Profile {
+  id        String   @id @default(cuid())
+  userId    String   @unique
+  email     String   @unique
+  firstName String
+  lastName  String
+  business  String
+  role      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  settings     UserSettings?
+  projects     Project[]
+  tasks        Task[]
+  aiInteractions AIInteraction[]
+  documents    Document[]
+  calendar     CalendarEvent[]
+  contacts     Contact[]
+  notes        Note[]
+  timeEntries  TimeEntry[]
+  invoices     Invoice[]
+  payments     Payment[]
+}
+
+// User settings and preferences
+model UserSettings {
+  id        String   @id @default(cuid())
+  profileId String   @unique
+  profile   Profile  @relation(fields: [profileId], references: [id], onDelete: Cascade)
+  
+  // Notification preferences
+  notifications Json
+  
+  // UI preferences
+  preferences Json
+  
+  // AI preferences
+  aiPreferences Json
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// Projects
+model Project {
+  id          String   @id @default(cuid())
+  name        String
+  description String?
+  status      String   @default("active")
+  startDate   DateTime
+  endDate     DateTime?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relations
+  profileId   String
+  profile     Profile  @relation(fields: [profileId], references: [id], onDelete: Cascade)
+  tasks       Task[]
+  documents   Document[]
+  timeEntries TimeEntry[]
+  invoices    Invoice[]
+}
+
+// Tasks
+model Task {
+  id          String   @id @default(cuid())
+  title       String
+  description String?
+  status      String   @default("todo")
+  priority    String   @default("medium")
+  dueDate     DateTime?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relations
+  profileId   String
+  profile     Profile  @relation(fields: [profileId], references: [id], onDelete: Cascade)
+  projectId   String?
+  project     Project? @relation(fields: [projectId], references: [id], onDelete: SetNull)
+  timeEntries TimeEntry[]
+  notes       Note[]
+}
+
+// AI Interactions
+model AIInteraction {
+  id        String   @id @default(cuid())
+  type      String   // command, chat, analysis, etc.
+  input     String
+  output    String
+  metadata  Json?
+  createdAt DateTime @default(now())
+
+  // Relations
+  profileId String
+  profile   Profile  @relation(fields: [profileId], references: [id], onDelete: Cascade)
+}
+
+// Documents
+model Document {
+  id          String   @id @default(cuid())
+  title       String
+  content     String
+  type        String   // note, contract, proposal, etc.
+  status      String   @default("draft")
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relations
+  profileId   String
+  profile     Profile  @relation(fields: [profileId], references: [id], onDelete: Cascade)
+  projectId   String?
+  project     Project? @relation(fields: [projectId], references: [id], onDelete: SetNull)
+}
+
+// Calendar Events
+model CalendarEvent {
+  id          String   @id @default(cuid())
+  title       String
+  description String?
+  startTime   DateTime
+  endTime     DateTime
+  type        String   // meeting, deadline, reminder, etc.
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relations
+  profileId   String
+  profile     Profile  @relation(fields: [profileId], references: [id], onDelete: Cascade)
+}
+
+// Contacts
+model Contact {
+  id          String   @id @default(cuid())
+  name        String
+  email       String?
+  phone       String?
+  company     String?
+  role        String?
+  notes       String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relations
+  profileId   String
+  profile     Profile  @relation(fields: [profileId], references: [id], onDelete: Cascade)
+}
+
+// Notes
+model Note {
+  id          String   @id @default(cuid())
+  content     String
+  type        String   // general, meeting, task, etc.
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relations
+  profileId   String
+  profile     Profile  @relation(fields: [profileId], references: [id], onDelete: Cascade)
+  taskId      String?
+  task        Task?    @relation(fields: [taskId], references: [id], onDelete: SetNull)
+}
+
+// Time Tracking
+model TimeEntry {
+  id          String   @id @default(cuid())
+  description String
+  startTime   DateTime
+  endTime     DateTime
+  duration    Int      // in minutes
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relations
+  profileId   String
+  profile     Profile  @relation(fields: [profileId], references: [id], onDelete: Cascade)
+  projectId   String?
+  project     Project? @relation(fields: [projectId], references: [id], onDelete: SetNull)
+  taskId      String?
+  task        Task?    @relation(fields: [taskId], references: [id], onDelete: SetNull)
+}
+
+// Invoices
+model Invoice {
+  id          String   @id @default(cuid())
+  number      String   @unique
+  amount      Float
+  currency    String   @default("USD")
+  status      String   @default("draft")
+  dueDate     DateTime
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relations
+  profileId   String
+  profile     Profile  @relation(fields: [profileId], references: [id], onDelete: Cascade)
+  projectId   String?
+  project     Project? @relation(fields: [projectId], references: [id], onDelete: SetNull)
+  payments    Payment[]
+}
+
+// Payments
+model Payment {
+  id          String   @id @default(cuid())
+  amount      Float
+  currency    String   @default("USD")
+  status      String   @default("pending")
+  method      String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relations
+  profileId   String
+  profile     Profile  @relation(fields: [profileId], references: [id], onDelete: Cascade)
+  invoiceId   String
+  invoice     Invoice  @relation(fields: [invoiceId], references: [id], onDelete: Cascade)
+} 
