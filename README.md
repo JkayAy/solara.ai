@@ -1,104 +1,105 @@
-# Solara Enterprise Suite
+# Solara Business Enterprise Suite
 
-A comprehensive enterprise-grade business management platform that combines AI-powered analytics, automation, and robust project management capabilities.
+A powerful, modern business management platform built with Next.js 14, TypeScript, and Clerk authentication.
 
-## Core Features
+## 🌟 Features
 
-### 📊 Advanced Analytics & Reporting
-- Real-time business intelligence
-- Performance analytics
-- Usage metrics
-- Trend analysis
-- AI-powered recommendations
-- Real-time monitoring
+- **Authentication & Authorization**
+  - Secure user authentication with Clerk
+  - Role-based access control
+  - Protected routes and API endpoints
 
-### 🤖 AI-Powered Insights & Automation
-- Smart workflow automation
-- Predictive analytics
-- Intelligent task scheduling
-- Automated reporting
-- AI-driven decision support
+- **Project Management**
+  - Time tracking
+  - Task management
+  - Project analytics
+  - Team collaboration
 
-### 📝 Document Management System
-- Centralized document storage
-- Version control
-- Collaborative editing
-- Advanced search capabilities
-- Secure file sharing
+- **Modern UI/UX**
+  - Responsive design
+  - Dark/Light mode
+  - Beautiful animations
+  - Intuitive navigation
 
-### 💼 Client & Project Management
-- Client relationship management
-- Project tracking
-- Resource allocation
-- Timeline management
-- Milestone tracking
+## 🚀 Getting Started
 
-### 📈 Financial Management & Invoicing
-- Automated invoicing
-- Expense tracking
-- Financial reporting
-- Budget management
-- Payment processing
+### Prerequisites
 
-### 👥 Team Collaboration & Management
-- Team communication
-- Task assignment
-- Progress tracking
-- Performance monitoring
-- Resource management
+- Node.js 18.x or later
+- npm or yarn
+- Clerk account for authentication
 
-### 🔒 Enterprise-grade Security
-- Role-based access control
-- Data encryption
-- Audit logging
-- Compliance management
-- Security monitoring
+### Installation
 
-### 🎨 Website Builder & Digital Presence
-- Template-based website creation
-- Asset management system
-- Multiple layout options
-- Customizable themes
-- Real-time preview
-- Fast and efficient website generation
+1. Clone the repository:
+```bash
+git clone https://github.com/JkayAy/solara.ai.git
+cd solara.ai
+```
 
-### 🤖 Automation Suite
-- Workflow automation
-- Scheduled tasks
-- Email automation
-- Process automation
-- Template management
+2. Install dependencies:
+```bash
+npm install
+```
 
-## Tech Stack
+3. Set up environment variables:
+Create a `.env.local` file in the root directory with the following variables:
+```env
+NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=your_clerk_publishable_key
+CLERK_SECRET_KEY=your_clerk_secret_key
+```
 
-- **Frontend**: Next.js 14, React, TypeScript
-- **Backend**: Node.js, Express
-- **Database**: PostgreSQL
+4. Run the development server:
+```bash
+npm run dev
+```
+
+5. Open [http://localhost:3000](http://localhost:3000) in your browser.
+
+## 🛠️ Tech Stack
+
+- **Framework**: Next.js 14
+- **Language**: TypeScript
 - **Authentication**: Clerk
-- **AI/ML**: OpenAI, TensorFlow
-- **Cloud**: AWS
-- **Monitoring**: Sentry
-- **Testing**: Jest, Cypress
+- **Styling**: Tailwind CSS
+- **UI Components**: shadcn/ui
+- **State Management**: React Context
+- **Animation**: Framer Motion
+- **Icons**: Lucide Icons
 
-## Getting Started
+## 📁 Project Structure
 
-1. Clone the repository
-2. Install dependencies: `npm install`
-3. Set up environment variables
-4. Run development server: `npm run dev`
+```
+solara.ai/
+├── src/
+│   ├── app/              # App router pages
+│   ├── components/       # Reusable components
+│   ├── lib/             # Utility functions
+│   ├── styles/          # Global styles
+│   └── contexts/        # React contexts
+├── public/              # Static assets
+└── ...
+```
 
-## Contributing
+## 🤝 Contributing
 
-Please read our [Contributing Guide](CONTRIBUTING.md) for details on our code of conduct and the process for submitting pull requests.
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
 
-## License
+## 📝 License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-## Acknowledgments
+## 👥 Authors
+
+- **JkayAy** - *Initial work* - [GitHub](https://github.com/JkayAy)
+
+## 🙏 Acknowledgments
 
 - [Next.js](https://nextjs.org/)
+- [Clerk](https://clerk.com/)
 - [Tailwind CSS](https://tailwindcss.com/)
-- [Framer Motion](https://www.framer.com/motion/)
-- [Lucide Icons](https://lucide.dev/)
-- [Prisma](https://www.prisma.io/)
+- [shadcn/ui](https://ui.shadcn.com/)

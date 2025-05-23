@@ -4,7 +4,7 @@ import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useAuth, SignInButton, SignUpButton } from '@clerk/nextjs';
-import { ArrowRight, Mail, Calendar, FileText, Users, Sparkles, MessageSquare, CheckCircle2, Zap, Shield, Clock, BarChart, ClipboardList, Receipt, GlobeAltIcon } from "lucide-react";
+import { ArrowRight, Mail, Calendar, FileText, Users, Sparkles, MessageSquare, CheckCircle2, Zap, Shield, Clock, BarChart, ClipboardList, Receipt } from "lucide-react";
 import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
 import { Pricing } from "@/components/pricing";
@@ -169,12 +169,7 @@ export default function HomePage() {
       icon: Receipt,
       href: "/dashboard/invoices",
       benefits: ["Auto-generation", "Payment tracking", "Financial reporting"]
-    },
-    {
-      title: "Digital Presence",
-      description: "Create and manage your digital presence with our powerful tools",
-      icon: GlobeAltIcon,
-    },
+    }
   ];
 
   const stats = [
