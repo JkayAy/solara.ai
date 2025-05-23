@@ -1,6 +1,6 @@
-# Contributing to Solara Business Enterprise Suite
+# Contributing to Solara Website Builder
 
-We love your input! We want to make contributing to Solara Business Enterprise Suite as easy and transparent as possible, whether it's:
+We love your input! We want to make contributing to Solara Website Builder as easy and transparent as possible, whether it's:
 
 - Reporting a bug
 - Discussing the current state of the code

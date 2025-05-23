@@ -34,7 +34,7 @@ const navigation = [
   { name: 'Inbox', href: '/dashboard/inbox', icon: InboxIcon },
   { name: 'Projects', href: '/dashboard/projects', icon: FolderIcon },
   { name: 'Time Tracking', href: '/dashboard/time-tracking', icon: ClockIcon },
-  { name: 'Digital Presence', href: '/dashboard/website-builder', icon: GlobeAltIcon },
+  { name: 'Website Builder', href: '/dashboard/website-builder', icon: GlobeAltIcon },
   { name: 'Financial', href: '/dashboard/financial', icon: CurrencyDollarIcon },
   { name: 'Analytics', href: '/dashboard/analytics', icon: ChartBarIcon },
   { name: 'Insights', href: '/dashboard/insights', icon: LightBulbIcon },

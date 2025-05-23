@@ -119,8 +119,8 @@ export default function DashboardPage() {
     },
     {
       id: 2,
-      name: 'Digital Presence',
-      description: 'Create and manage your digital presence with our powerful tools',
+      name: 'Website Builder',
+      description: 'Create and manage your website with our powerful tools',
       icon: GlobeAltIcon,
       link: '/dashboard/website-builder',
       tooltip: 'Generate professional websites with AI-powered templates and content',
