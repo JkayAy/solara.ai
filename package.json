@@ -1,7 +1,8 @@
 {
-  "name": "solara-ai",
+  "name": "solara-enterprise-suite",
   "version": "0.1.0",
   "private": true,
+  "description": "Enterprise-grade business management platform with AI-powered analytics, automation, document management, and comprehensive project management capabilities",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
