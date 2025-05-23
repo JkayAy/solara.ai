@@ -1,4 +1,5 @@
 import { Proposal, Client } from '@/types';
+import { OpenAI } from 'openai';
 
 interface ProposalPrediction {
   id: string;
@@ -48,6 +49,173 @@ interface ClientBehavior {
 }
 
 export class AIService {
+  private openai: any; // OpenAI client
+  private model: string = 'gpt-4';
+
+  constructor() {
+    // Initialize OpenAI client
+    this.openai = new OpenAI({
+      apiKey: process.env.OPENAI_API_KEY,
+    });
+  }
+
+  // Smart task prioritization
+  async prioritizeTasks(tasks: Task[]): Promise<Task[]> {
+    const taskContext = tasks.map(task => ({
+      id: task.id,
+      title: task.title,
+      description: task.description,
+      dueDate: task.dueDate,
+      priority: task.priority,
+      status: task.status
+    }));
+
+    const prompt = `Analyze these tasks and suggest optimal priorities based on:
+    1. Due dates
+    2. Dependencies
+    3. Current status
+    4. Task complexity
+    Tasks: ${JSON.stringify(taskContext)}`;
+
+    const response = await this.openai.chat.completions.create({
+      model: this.model,
+      messages: [{ role: 'user', content: prompt }],
+      temperature: 0.7,
+    });
+
+    const prioritizedTasks = JSON.parse(response.choices[0].message.content);
+    return tasks.map(task => ({
+      ...task,
+      priority: prioritizedTasks[task.id]?.priority || task.priority
+    }));
+  }
+
+  // Smart document organization
+  async organizeDocuments(documents: Document[]): Promise<Document[]> {
+    const docContext = documents.map(doc => ({
+      id: doc.id,
+      title: doc.title,
+      content: doc.content,
+      type: doc.type
+    }));
+
+    const prompt = `Analyze these documents and suggest optimal organization based on:
+    1. Content similarity
+    2. Document type
+    3. Creation date
+    4. Usage patterns
+    Documents: ${JSON.stringify(docContext)}`;
+
+    const response = await this.openai.chat.completions.create({
+      model: this.model,
+      messages: [{ role: 'user', content: prompt }],
+      temperature: 0.7,
+    });
+
+    const organizedDocs = JSON.parse(response.choices[0].message.content);
+    return documents.map(doc => ({
+      ...doc,
+      metadata: {
+        ...doc.metadata,
+        category: organizedDocs[doc.id]?.category,
+        tags: organizedDocs[doc.id]?.tags
+      }
+    }));
+  }
+
+  // Smart meeting scheduling
+  async optimizeMeetingSchedule(meetings: CalendarEvent[]): Promise<CalendarEvent[]> {
+    const meetingContext = meetings.map(meeting => ({
+      id: meeting.id,
+      title: meeting.title,
+      startTime: meeting.startTime,
+      endTime: meeting.endTime,
+      type: meeting.type
+    }));
+
+    const prompt = `Optimize these meeting schedules based on:
+    1. Meeting duration
+    2. Participant availability
+    3. Meeting type
+    4. Time zones
+    Meetings: ${JSON.stringify(meetingContext)}`;
+
+    const response = await this.openai.chat.completions.create({
+      model: this.model,
+      messages: [{ role: 'user', content: prompt }],
+      temperature: 0.7,
+    });
+
+    const optimizedMeetings = JSON.parse(response.choices[0].message.content);
+    return meetings.map(meeting => ({
+      ...meeting,
+      startTime: new Date(optimizedMeetings[meeting.id]?.startTime),
+      endTime: new Date(optimizedMeetings[meeting.id]?.endTime)
+    }));
+  }
+
+  // Smart email response generation
+  async generateEmailResponse(email: any): Promise<string> {
+    const prompt = `Generate a professional email response based on:
+    1. Original email content
+    2. Context and tone
+    3. Previous interactions
+    4. Business objectives
+    Email: ${JSON.stringify(email)}`;
+
+    const response = await this.openai.chat.completions.create({
+      model: this.model,
+      messages: [{ role: 'user', content: prompt }],
+      temperature: 0.7,
+    });
+
+    return response.choices[0].message.content;
+  }
+
+  // Smart workflow automation
+  async suggestWorkflowAutomation(tasks: Task[]): Promise<any> {
+    const taskContext = tasks.map(task => ({
+      id: task.id,
+      title: task.title,
+      description: task.description,
+      status: task.status,
+      dependencies: task.dependencies
+    }));
+
+    const prompt = `Suggest workflow automation based on:
+    1. Task patterns
+    2. Dependencies
+    3. Time requirements
+    4. Resource allocation
+    Tasks: ${JSON.stringify(taskContext)}`;
+
+    const response = await this.openai.chat.completions.create({
+      model: this.model,
+      messages: [{ role: 'user', content: prompt }],
+      temperature: 0.7,
+    });
+
+    return JSON.parse(response.choices[0].message.content);
+  }
+
+  // Smart analytics insights
+  async generateAnalyticsInsights(data: any): Promise<BusinessInsight[]> {
+    const prompt = `Generate business insights based on:
+    1. Performance metrics
+    2. User behavior
+    3. Market trends
+    4. Historical data
+    Data: ${JSON.stringify(data)}`;
+
+    const response = await this.openai.chat.completions.create({
+      model: this.model,
+      messages: [{ role: 'user', content: prompt }],
+      temperature: 0.7,
+    });
+
+    return JSON.parse(response.choices[0].message.content);
+  }
+
   // Analyze proposal success probability
   async predictProposalSuccess(proposal: Proposal): Promise<ProposalPrediction> {
     // TODO: Implement actual AI prediction logic

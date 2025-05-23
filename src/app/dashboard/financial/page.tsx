@@ -9,10 +9,10 @@ import { useData } from '@/hooks/useData';
 import { api } from '@/lib/api';
 import { validate, rules } from '@/lib/validation';
 import {
-  DocumentTextIcon,
+ DocumentTextIcon,
   CalculatorIcon,
-  CreditCardIcon,
-  ChartBarIcon,
+ CreditCardIcon,
+ ChartBarIcon,
   PlusIcon,
   ArrowDownTrayIcon,
   DocumentPlusIcon,
@@ -26,30 +26,30 @@ interface FinancialMetrics {
 }
 
 const financialFeatures = [
-  {
-    title: 'Invoicing',
+ {
+  title: 'Invoicing',
     description: 'Create and manage invoices',
-    icon: DocumentTextIcon,
+  icon: DocumentTextIcon,
     href: '/dashboard/financial/invoicing',
-  },
-  {
-    title: 'Accounting',
+ },
+ {
+  title: 'Accounting',
     description: 'Track financial transactions',
     icon: CalculatorIcon,
-    href: '/dashboard/financial/accounting',
-  },
-  {
-    title: 'Payments',
+  href: '/dashboard/financial/accounting',
+ },
+ {
+  title: 'Payments',
     description: 'Process and track payments',
-    icon: CreditCardIcon,
-    href: '/dashboard/financial/payments',
-  },
-  {
-    title: 'Revenue',
+  icon: CreditCardIcon,
+  href: '/dashboard/financial/payments',
+ },
+ {
+  title: 'Revenue',
     description: 'View revenue analytics',
     icon: ChartBarIcon,
-    href: '/dashboard/financial/revenue',
-  },
+  href: '/dashboard/financial/revenue',
+ },
 ];
 
 export default function FinancialPage() {
@@ -62,10 +62,10 @@ export default function FinancialPage() {
   );
 
   if (loading) {
-    return (
+ return (
       <div className="flex items-center justify-center min-h-screen">
         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600" />
-      </div>
+   </div>
     );
   }
 
@@ -75,7 +75,7 @@ export default function FinancialPage() {
         <div className="text-red-600">
           Error: {error.message}
         </div>
-      </div>
+       </div>
     );
   }
 
@@ -84,31 +84,31 @@ export default function FinancialPage() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-8">
         <PageHeader title="Financial Management">
           <div className="flex space-x-4">
-            <button
-              type="button"
+      <button
+       type="button"
               onClick={() => setShowCreateInvoiceModal(true)}
-              className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-            >
+       className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+      >
               <PlusIcon className="h-5 w-5 mr-2" />
               Create Invoice
-            </button>
-            <button
-              type="button"
+      </button>
+      <button
+       type="button"
               onClick={() => setShowRecordPaymentModal(true)}
-              className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-            >
+       className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+      >
               <DocumentPlusIcon className="h-5 w-5 mr-2" />
-              Record Payment
-            </button>
-            <button
-              type="button"
+       Record Payment
+      </button>
+      <button
+       type="button"
               onClick={() => setShowGenerateReportModal(true)}
-              className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-            >
+       className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+      >
               <ArrowDownTrayIcon className="h-5 w-5 mr-2" />
-              Generate Report
-            </button>
-          </div>
+       Generate Report
+      </button>
+     </div>
         </PageHeader>
 
         {/* Financial Overview */}
@@ -133,7 +133,7 @@ export default function FinancialPage() {
             value={metrics?.pendingInvoices.toString() || '0'}
             icon={CreditCardIcon}
           />
-        </div>
+    </div>
 
         {/* Financial Features */}
         <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
@@ -148,7 +148,7 @@ export default function FinancialPage() {
                   <feature.icon className="h-6 w-6" aria-hidden="true" />
                 </span>
               </div>
-              <div className="mt-8">
+    <div className="mt-8">
                 <h3 className="text-lg font-medium">
                   <span className="absolute inset-0" aria-hidden="true" />
                   {feature.title}
@@ -192,7 +192,7 @@ export default function FinancialPage() {
               Go to Invoicing
             </Link>
           </div>
-        </div>
+         </div>
       </Modal>
 
       {/* Record Payment Modal */}
@@ -257,9 +257,9 @@ export default function FinancialPage() {
             >
               Generate Annual Report
             </button>
-          </div>
+         </div>
         </div>
       </Modal>
-    </div>
-  );
+  </div>
+ );
 } 

@@ -23,6 +23,9 @@ import {
   ChatBubbleLeftRightIcon,
   ClipboardDocumentListIcon,
   PresentationChartLineIcon,
+  CommandLineIcon,
+  PuzzlePieceIcon,
+  GlobeAltIcon,
 } from '@heroicons/react/24/outline';
 import Link from 'next/link';
 import { Tooltip } from '@/components/Tooltip';
@@ -107,6 +110,33 @@ export default function DashboardPage() {
   const [quickActions, setQuickActions] = useState([
     {
       id: 1,
+      name: 'AI Command Center',
+      description: 'Control your entire system with AI',
+      icon: CommandLineIcon,
+      link: '/dashboard/ai-command',
+      tooltip: 'Use natural language to control all features and get AI-powered insights',
+      category: 'AI',
+    },
+    {
+      id: 2,
+      name: 'Website Builder',
+      description: 'Create stunning websites instantly',
+      icon: GlobeAltIcon,
+      link: '/dashboard/website-builder',
+      tooltip: 'Generate professional websites with AI-powered templates and content',
+      category: 'Creation',
+    },
+    {
+      id: 3,
+      name: 'Integrations Hub',
+      description: 'Connect your favorite tools',
+      icon: PuzzlePieceIcon,
+      link: '/dashboard/integrations',
+      tooltip: 'Manage all your integrations and automate workflows',
+      category: 'Integration',
+    },
+    {
+      id: 4,
       name: 'Create Document',
       description: 'Start a new document',
       icon: DocumentIcon,
@@ -115,7 +145,7 @@ export default function DashboardPage() {
       category: 'Documents',
     },
     {
-      id: 2,
+      id: 5,
       name: 'Manage Users',
       description: 'View and manage user access',
       icon: UserGroupIcon,
@@ -124,7 +154,7 @@ export default function DashboardPage() {
       category: 'Team',
     },
     {
-      id: 3,
+      id: 6,
       name: 'Security Settings',
       description: 'Configure security options',
       icon: ShieldCheckIcon,
@@ -133,7 +163,7 @@ export default function DashboardPage() {
       category: 'Security',
     },
     {
-      id: 4,
+      id: 7,
       name: 'System Analytics',
       description: 'Monitor system performance and usage',
       icon: ChartBarIcon,
@@ -142,7 +172,7 @@ export default function DashboardPage() {
       category: 'Analytics',
     },
     {
-      id: 5,
+      id: 8,
       name: 'Financial Overview',
       description: 'Track revenue and expenses',
       icon: CurrencyDollarIcon,
@@ -151,7 +181,7 @@ export default function DashboardPage() {
       category: 'Finance',
     },
     {
-      id: 6,
+      id: 9,
       name: 'Time Tracking',
       description: 'Monitor time and productivity',
       icon: ClockIcon,
@@ -160,7 +190,7 @@ export default function DashboardPage() {
       category: 'Productivity',
     },
     {
-      id: 7,
+      id: 10,
       name: 'Calendar',
       description: 'Manage your schedule',
       icon: CalendarIcon,
@@ -169,7 +199,7 @@ export default function DashboardPage() {
       category: 'Schedule',
     },
     {
-      id: 8,
+      id: 11,
       name: 'Inbox',
       description: 'Check your messages',
       icon: InboxIcon,
@@ -178,7 +208,7 @@ export default function DashboardPage() {
       category: 'Communication',
     },
     {
-      id: 9,
+      id: 12,
       name: 'Projects',
       description: 'Manage your projects',
       icon: FolderIcon,
@@ -187,7 +217,7 @@ export default function DashboardPage() {
       category: 'Projects',
     },
     {
-      id: 10,
+      id: 13,
       name: 'Business Reports',
       description: 'Generate and schedule reports',
       icon: ChartPieIcon,
@@ -196,7 +226,7 @@ export default function DashboardPage() {
       category: 'Analytics',
     },
     {
-      id: 11,
+      id: 14,
       name: 'Automation',
       description: 'Set up workflows',
       icon: ArrowPathIcon,
@@ -205,7 +235,7 @@ export default function DashboardPage() {
       category: 'Efficiency',
     },
     {
-      id: 12,
+      id: 15,
       name: 'Business Insights',
       description: 'Get AI-powered recommendations',
       icon: LightBulbIcon,

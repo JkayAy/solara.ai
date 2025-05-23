@@ -23,6 +23,7 @@ import {
   LightBulbIcon,
   UserCircleIcon,
   GlobeAltIcon,
+  PuzzlePieceIcon,
 } from '@heroicons/react/24/outline';
 
 const navigation = [
@@ -41,6 +42,7 @@ const navigation = [
   { name: 'Documents', href: '/dashboard/documents', icon: DocumentDuplicateIcon },
   { name: 'Reports', href: '/dashboard/reports', icon: ChartPieIcon },
   { name: 'Automation', href: '/dashboard/automation', icon: ArrowPathIcon },
+  { name: 'Integrations', href: '/dashboard/integrations', icon: PuzzlePieceIcon },
   { name: 'Security', href: '/dashboard/security', icon: ShieldCheckIcon },
   { name: 'Settings', href: '/dashboard/settings', icon: CogIcon },
 ];

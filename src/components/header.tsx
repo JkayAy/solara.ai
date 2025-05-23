@@ -1,12 +1,14 @@
 "use client";
 
 import Link from "next/link";
-import { SignInButton, SignUpButton } from "@clerk/nextjs";
+import { Button } from "@/components/ui/button";
+import { SignInButton, SignUpButton, useAuth } from "@clerk/nextjs";
 import { Menu, X } from "lucide-react";
 import { useState } from "react";
 
 export function Header() {
  const [isMenuOpen, setIsMenuOpen] = useState(false);
+ const { isSignedIn } = useAuth();
 
  const navigation = [
   { name: "Features", href: "/#features" },
@@ -17,36 +19,40 @@ export function Header() {
 
  return (
   <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-   <div className="container flex h-16 items-center justify-between">
-    <Link href="/" className="flex items-center space-x-2">
-     <span className="text-xl font-bold">Solara</span>
-    </Link>
-
-    {/* Desktop Navigation */}
-    <nav className="hidden md:flex items-center space-x-8">
-     {navigation.map((item) => (
-      <Link
-       key={item.name}
-       href={item.href}
-       className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors"
-      >
-       {item.name}
-      </Link>
-     ))}
-    </nav>
-
-    {/* Desktop Auth Buttons */}
-    <div className="hidden md:flex items-center space-x-4">
-     <SignInButton mode="modal" afterSignInUrl="/dashboard">
-      <button className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors">
-       Sign In
-      </button>
-     </SignInButton>
-     <SignUpButton mode="modal" afterSignUpUrl="/dashboard">
-      <button className="inline-flex items-center justify-center px-4 py-2 rounded-md bg-primary text-primary-foreground hover:bg-primary/90 transition-colors">
-       Get Started
-      </button>
-     </SignUpButton>
+   <div className="container flex h-14 items-center">
+    <div className="mr-4 flex">
+     <Link href="/" className="mr-6 flex items-center space-x-2">
+      <span className="font-bold">Solara AI</span>
+     </Link>
+    </div>
+    <div className="flex flex-1 items-center justify-between space-x-2 md:justify-end">
+     <nav className="flex items-center space-x-6">
+      {navigation.map((item) => (
+       <Link
+        key={item.name}
+        href={item.href}
+        className="text-sm font-medium transition-colors hover:text-primary"
+       >
+        {item.name}
+       </Link>
+      ))}
+     </nav>
+     <div className="flex items-center space-x-4">
+      {!isSignedIn ? (
+       <>
+        <SignInButton mode="modal">
+         <Button variant="ghost">Sign In</Button>
+        </SignInButton>
+        <SignUpButton mode="modal">
+         <Button>Get Started</Button>
+        </SignUpButton>
+       </>
+      ) : (
+       <Link href="/dashboard">
+        <Button>Dashboard</Button>
+       </Link>
+      )}
+     </div>
     </div>
 
     {/* Mobile Menu Button */}
@@ -78,16 +84,26 @@ export function Header() {
        </Link>
       ))}
       <div className="pt-4 space-y-2">
-       <SignInButton mode="modal" afterSignInUrl="/dashboard">
-        <button className="w-full text-left text-sm font-medium text-muted-foreground hover:text-primary transition-colors">
-         Sign In
-        </button>
-       </SignInButton>
-       <SignUpButton mode="modal" afterSignUpUrl="/dashboard">
-        <button className="w-full inline-flex items-center justify-center px-4 py-2 rounded-md bg-primary text-primary-foreground hover:bg-primary/90 transition-colors">
-         Get Started
-        </button>
-       </SignUpButton>
+       {!isSignedIn ? (
+        <>
+         <SignInButton mode="modal">
+          <button className="w-full text-left text-sm font-medium text-muted-foreground hover:text-primary transition-colors">
+           Sign In
+          </button>
+         </SignInButton>
+         <SignUpButton mode="modal">
+          <button className="w-full inline-flex items-center justify-center px-4 py-2 rounded-md bg-primary text-primary-foreground hover:bg-primary/90 transition-colors">
+           Get Started
+          </button>
+         </SignUpButton>
+        </>
+       ) : (
+        <Link href="/dashboard">
+         <button className="w-full text-left text-sm font-medium text-muted-foreground hover:text-primary transition-colors">
+          Dashboard
+         </button>
+        </Link>
+       )}
       </div>
      </div>
     </div>

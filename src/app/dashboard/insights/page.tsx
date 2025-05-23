@@ -5,7 +5,7 @@ import { LightBulbIcon, ChartBarIcon, ArrowTrendingUpIcon, ChevronRightIcon } fr
 import Link from 'next/link';
 
 const InsightsPage = () => {
- return (
+  return (
   <div className="py-6">
    <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-8">
     <h1 className="text-2xl font-semibold text-gray-900">Insights</h1>
@@ -23,7 +23,7 @@ const InsightsPage = () => {
         <div className="flex items-center">
          <div className="flex-shrink-0">
           <ArrowTrendingUpIcon className="h-6 w-6 text-gray-400" aria-hidden="true" />
-         </div>
+    </div>
          <div className="ml-5 w-0 flex-1">
           <dl>
            <dt className="text-sm font-medium text-gray-500 truncate">Key Metrics</dt>
@@ -31,14 +31,14 @@ const InsightsPage = () => {
             <div className="text-2xl font-semibold text-gray-900">24%</div>
             <div className="ml-2 flex items-baseline text-sm font-semibold text-green-600">
              <span>Growth</span>
-            </div>
+   </div>
            </dd>
           </dl>
-         </div>
-        </div>
+     </div>
+    </div>
         <ChevronRightIcon className="h-5 w-5 text-gray-400" aria-hidden="true" />
-       </div>
-      </div>
+     </div>
+    </div>
      </Link>
 
      {/* Performance Card */}
@@ -51,7 +51,7 @@ const InsightsPage = () => {
         <div className="flex items-center">
          <div className="flex-shrink-0">
           <ChartBarIcon className="h-6 w-6 text-gray-400" aria-hidden="true" />
-         </div>
+     </div>
          <div className="ml-5 w-0 flex-1">
           <dl>
            <dt className="text-sm font-medium text-gray-500 truncate">Performance</dt>
@@ -59,13 +59,13 @@ const InsightsPage = () => {
             <div className="text-2xl font-semibold text-gray-900">89%</div>
             <div className="ml-2 flex items-baseline text-sm font-semibold text-green-600">
              <span>Efficiency</span>
-            </div>
+     </div>
            </dd>
           </dl>
-         </div>
-        </div>
+     </div>
+    </div>
         <ChevronRightIcon className="h-5 w-5 text-gray-400" aria-hidden="true" />
-       </div>
+   </div>
       </div>
      </Link>
 
@@ -87,16 +87,16 @@ const InsightsPage = () => {
             <div className="text-2xl font-semibold text-gray-900">5</div>
             <div className="ml-2 flex items-baseline text-sm font-semibold text-blue-600">
              <span>New</span>
-            </div>
+      </div>
            </dd>
           </dl>
-         </div>
-        </div>
+      </div>
+     </div>
         <ChevronRightIcon className="h-5 w-5 text-gray-400" aria-hidden="true" />
-       </div>
+    </div>
       </div>
      </Link>
-    </div>
+      </div>
 
     {/* Additional Content Section */}
     <div className="mt-8">

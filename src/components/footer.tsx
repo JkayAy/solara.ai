@@ -6,7 +6,6 @@ export function Footer() {
   product: [
    { name: 'Features', href: '/#features' },
    { name: 'Pricing', href: '/#pricing' },
-   { name: 'Integrations', href: '/integrations' },
    { name: 'Updates', href: '/updates' },
    { name: 'Roadmap', href: '/roadmap' },
   ],

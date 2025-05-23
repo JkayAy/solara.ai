@@ -1,195 +1,274 @@
 'use client';
 
-import React, { useState } from 'react';
-import {
- ArrowLeftIcon,
- PlusIcon,
- PlayIcon,
- PauseIcon,
- TrashIcon,
- ArrowPathIcon,
-} from '@heroicons/react/24/outline';
-import Link from 'next/link';
+import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Plus, Trash2, Edit2, Play } from 'lucide-react';
+import { toast } from 'sonner';
+import { WorkflowTemplate } from '@prisma/client';
+import { Skeleton } from '@/components/ui/skeleton';
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import { AlertCircle } from 'lucide-react';
+import { pusherClient } from '@/lib/pusher';
+import { useAuth } from '@clerk/nextjs';
+import { monitoringService } from '@/lib/services/monitoring-service';
+import { Badge } from '@/components/ui/badge';
 
-interface Workflow {
- id: string;
- name: string;
- description: string;
- status: 'active' | 'paused' | 'stopped';
- lastRun: string;
- nextRun: string;
- triggers: string[];
- actions: string[];
-}
+export default function WorkflowTemplatesPage() {
+ const [templates, setTemplates] = useState<WorkflowTemplate[]>([]);
+ const [loading, setLoading] = useState(true);
+ const [error, setError] = useState<string | null>(null);
+ const router = useRouter();
+ const { userId, user } = useAuth();
 
-export default function WorkflowsPage() {
- const [workflows, setWorkflows] = useState<Workflow[]>([
-  {
-   id: '1',
-   name: 'Invoice Generation',
-   description: 'Automatically generate and send invoices',
-   status: 'active',
-   lastRun: '2024-03-20 09:00 AM',
-   nextRun: '2024-03-21 09:00 AM',
-   triggers: ['Daily at 9:00 AM'],
-   actions: ['Generate Invoice', 'Send Email'],
-  },
-  {
-   id: '2',
-   name: 'Report Generation',
-   description: 'Generate weekly performance reports',
-   status: 'paused',
-   lastRun: '2024-03-19 05:00 PM',
-   nextRun: '2024-03-26 05:00 PM',
-   triggers: ['Weekly on Monday'],
-   actions: ['Collect Data', 'Generate Report', 'Send to Team'],
-  },
- ]);
+ useEffect(() => {
+  if (!userId || !user) return;
 
- const [showNewWorkflowModal, setShowNewWorkflowModal] = useState(false);
+  // Set user in monitoring services
+  monitoringService.setUser({
+   id: userId,
+   email: user.emailAddresses[0]?.emailAddress,
+   name: user.fullName,
+  });
 
- const handleStatusChange = (id: string, newStatus: Workflow['status']) => {
-  setWorkflows(workflows.map(wf =>
-   wf.id === id ? { ...wf, status: newStatus } : wf
-  ));
+  // Subscribe to real-time events
+  const channel = pusherClient.subscribe(`profile-${userId}`);
+
+  channel.bind('workflow-created', (template: WorkflowTemplate) => {
+   setTemplates((prevTemplates) => [...prevTemplates, template]);
+   toast.success('New workflow template created');
+   monitoringService.trackEvent('workflow_template_created', {
+    templateId: template.id,
+    type: template.type,
+   });
+  });
+
+  channel.bind('workflow-updated', (template: WorkflowTemplate) => {
+   setTemplates((prevTemplates) =>
+    prevTemplates.map((t) => (t.id === template.id ? template : t))
+   );
+   toast.success('Workflow template updated');
+   monitoringService.trackEvent('workflow_template_updated', {
+    templateId: template.id,
+    type: template.type,
+   });
+  });
+
+  channel.bind('workflow-deleted', ({ id }: { id: string }) => {
+   setTemplates((prevTemplates) => prevTemplates.filter((t) => t.id !== id));
+   toast.success('Workflow template deleted');
+   monitoringService.trackEvent('workflow_template_deleted', {
+    templateId: id,
+   });
+  });
+
+  // Initial fetch
+  fetchTemplates();
+
+  // Cleanup subscription
+  return () => {
+   channel.unbind_all();
+   channel.unsubscribe();
+  };
+ }, [userId, user]);
+
+ const fetchTemplates = async () => {
+  const span = monitoringService.startPerformanceSpan('fetch_workflow_templates');
+  try {
+   setLoading(true);
+   setError(null);
+   const response = await fetch('/api/automation/workflows');
+   if (!response.ok) {
+    throw new Error('Failed to fetch workflow templates');
+   }
+   const data = await response.json();
+   setTemplates(data);
+   monitoringService.trackEvent('workflow_templates_fetched', {
+    count: data.length,
+   });
+  } catch (err) {
+   const error = err instanceof Error ? err : new Error('An error occurred');
+   setError(error.message);
+   toast.error('Failed to load workflow templates');
+   monitoringService.captureError(error, {
+    component: 'WorkflowTemplatesPage',
+    action: 'fetchTemplates',
+   });
+  } finally {
+   setLoading(false);
+   span.finish();
+  }
  };
 
- return (
-  <div className="py-6">
-   <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-8">
-    <div className="flex items-center justify-between mb-6">
-     <div className="flex items-center">
-      <Link
-       href="/dashboard/automation"
-       className="mr-4 p-2 rounded-full hover:bg-gray-100"
-      >
-       <ArrowLeftIcon className="h-5 w-5 text-gray-500" />
-      </Link>
-      <h1 className="text-2xl font-semibold text-gray-900">Workflow Automation</h1>
-     </div>
-     <button
-      onClick={() => setShowNewWorkflowModal(true)}
-      className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-     >
-      <PlusIcon className="h-5 w-5 mr-2" />
-      Create Workflow
-     </button>
-    </div>
+ const handleDelete = async (id: string) => {
+  const span = monitoringService.startPerformanceSpan('delete_workflow_template');
+  try {
+   const response = await fetch(`/api/automation/workflows?id=${id}`, {
+    method: 'DELETE',
+   });
+   if (!response.ok) {
+    throw new Error('Failed to delete workflow template');
+   }
+  } catch (err) {
+   const error = err instanceof Error ? err : new Error('Failed to delete workflow template');
+   toast.error('Failed to delete workflow template');
+   monitoringService.captureError(error, {
+    component: 'WorkflowTemplatesPage',
+    action: 'handleDelete',
+    templateId: id,
+   });
+  } finally {
+   span.finish();
+  }
+ };
 
-    {/* Workflow Stats */}
-    <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4 mb-6">
-     <div className="bg-white overflow-hidden shadow rounded-lg">
-      <div className="px-4 py-5 sm:p-6">
-       <dt className="text-sm font-medium text-gray-500 truncate">
-        Active Workflows
-       </dt>
-       <dd className="mt-1 text-3xl font-semibold text-gray-900">
-        {workflows.filter(w => w.status === 'active').length}
-       </dd>
-      </div>
-     </div>
-     <div className="bg-white overflow-hidden shadow rounded-lg">
-      <div className="px-4 py-5 sm:p-6">
-       <dt className="text-sm font-medium text-gray-500 truncate">
-        Paused Workflows
-       </dt>
-       <dd className="mt-1 text-3xl font-semibold text-gray-900">
-        {workflows.filter(w => w.status === 'paused').length}
-       </dd>
-      </div>
-     </div>
-     <div className="bg-white overflow-hidden shadow rounded-lg">
-      <div className="px-4 py-5 sm:p-6">
-       <dt className="text-sm font-medium text-gray-500 truncate">
-        Total Workflows
-       </dt>
-       <dd className="mt-1 text-3xl font-semibold text-gray-900">
-        {workflows.length}
-       </dd>
-      </div>
-     </div>
-     <div className="bg-white overflow-hidden shadow rounded-lg">
-      <div className="px-4 py-5 sm:p-6">
-       <dt className="text-sm font-medium text-gray-500 truncate">
-        Success Rate
-       </dt>
-       <dd className="mt-1 text-3xl font-semibold text-gray-900">98%</dd>
-      </div>
-     </div>
-    </div>
+ const handleRun = async (id: string) => {
+  const span = monitoringService.startPerformanceSpan('run_workflow_template');
+  try {
+   const response = await fetch(`/api/automation/workflows/${id}/run`, {
+    method: 'POST',
+   });
+   if (!response.ok) {
+    throw new Error('Failed to run workflow template');
+   }
+   toast.success('Workflow started successfully');
+   monitoringService.trackEvent('workflow_template_run', {
+    templateId: id,
+   });
+  } catch (err) {
+   const error = err instanceof Error ? err : new Error('Failed to run workflow template');
+   toast.error('Failed to run workflow template');
+   monitoringService.captureError(error, {
+    component: 'WorkflowTemplatesPage',
+    action: 'handleRun',
+    templateId: id,
+   });
+  } finally {
+   span.finish();
+  }
+ };
 
-    {/* Workflows List */}
-    <div className="bg-white shadow overflow-hidden sm:rounded-md">
-     <ul role="list" className="divide-y divide-gray-200">
-      {workflows.map((workflow) => (
-       <li key={workflow.id}>
-        <div className="px-4 py-4 sm:px-6">
-         <div className="flex items-center justify-between">
-          <div className="flex items-center">
-           <ArrowPathIcon className="h-5 w-5 text-gray-400 mr-2" />
-           <p className="text-sm font-medium text-indigo-600 truncate">
-            {workflow.name}
-           </p>
-          </div>
-          <div className="ml-2 flex-shrink-0 flex space-x-2">
-           {workflow.status === 'active' ? (
-            <button
-             onClick={() => handleStatusChange(workflow.id, 'paused')}
-             className="inline-flex items-center px-2.5 py-1.5 border border-transparent text-xs font-medium rounded text-indigo-700 bg-indigo-100 hover:bg-indigo-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-            >
-             <PauseIcon className="h-4 w-4 mr-1" />
-             Pause
-            </button>
-           ) : (
-            <button
-             onClick={() => handleStatusChange(workflow.id, 'active')}
-             className="inline-flex items-center px-2.5 py-1.5 border border-transparent text-xs font-medium rounded text-green-700 bg-green-100 hover:bg-green-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
-            >
-             <PlayIcon className="h-4 w-4 mr-1" />
-             Resume
-            </button>
-           )}
-           <button
-            onClick={() => handleStatusChange(workflow.id, 'stopped')}
-            className="inline-flex items-center px-2.5 py-1.5 border border-transparent text-xs font-medium rounded text-red-700 bg-red-100 hover:bg-red-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
-           >
-            <TrashIcon className="h-4 w-4 mr-1" />
-            Delete
-           </button>
-          </div>
-         </div>
-         <div className="mt-2 sm:flex sm:justify-between">
-          <div className="sm:flex">
-           <p className="flex items-center text-sm text-gray-500">
-            {workflow.description}
-           </p>
-          </div>
-          <div className="mt-2 flex items-center text-sm text-gray-500 sm:mt-0">
-           <p>Last Run: {workflow.lastRun}</p>
-           <span className="mx-2">•</span>
-           <p>Next Run: {workflow.nextRun}</p>
-          </div>
-         </div>
-         <div className="mt-2">
-          <div className="flex flex-wrap gap-2">
-           {workflow.triggers.map((trigger, index) => (
-            <span
-             key={index}
-             className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800"
-            >
-             {trigger}
-            </span>
-           ))}
-          </div>
-         </div>
-        </div>
-       </li>
-      ))}
-     </ul>
+ if (loading) {
+  return (
+   <div className="space-y-4">
+    <Skeleton className="h-8 w-[200px]" />
+    <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+     {[1, 2, 3].map((i) => (
+      <Card key={i}>
+       <CardHeader>
+        <Skeleton className="h-4 w-[250px]" />
+       </CardHeader>
+       <CardContent>
+        <Skeleton className="h-4 w-[200px]" />
+        <Skeleton className="h-4 w-[150px] mt-2" />
+       </CardContent>
+      </Card>
+     ))}
     </div>
    </div>
+  );
+ }
 
-   {/* New Workflow Modal (to be implemented) */}
+ if (error) {
+  return (
+   <Alert variant="destructive">
+    <AlertCircle className="h-4 w-4" />
+    <AlertTitle>Error</AlertTitle>
+    <AlertDescription>{error}</AlertDescription>
+   </Alert>
+  );
+ }
+
+ return (
+  <div className="space-y-4">
+   <div className="flex justify-between items-center">
+    <h1 className="text-2xl font-bold">Workflow Templates</h1>
+    <Button
+     onClick={() => {
+      monitoringService.trackEvent('create_workflow_button_clicked');
+      router.push('/dashboard/automation/workflows/new');
+     }}
+    >
+     <Plus className="mr-2 h-4 w-4" />
+     New Template
+    </Button>
+   </div>
+
+   {templates.length === 0 ? (
+    <Card>
+     <CardContent className="flex flex-col items-center justify-center p-6">
+      <p className="text-muted-foreground mb-4">No workflow templates found</p>
+      <Button
+       onClick={() => {
+        monitoringService.trackEvent('create_first_workflow_clicked');
+        router.push('/dashboard/automation/workflows/new');
+       }}
+      >
+       Create your first template
+      </Button>
+     </CardContent>
+    </Card>
+   ) : (
+    <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+     {templates.map((template) => (
+      <Card key={template.id}>
+       <CardHeader>
+        <CardTitle className="flex justify-between items-center">
+         {template.name}
+         <div className="flex space-x-2">
+          <Button
+           variant="ghost"
+           size="icon"
+           onClick={() => {
+            monitoringService.trackEvent('run_workflow_clicked', {
+             templateId: template.id,
+            });
+            handleRun(template.id);
+           }}
+          >
+           <Play className="h-4 w-4" />
+          </Button>
+          <Button
+           variant="ghost"
+           size="icon"
+           onClick={() => {
+            monitoringService.trackEvent('edit_workflow_clicked', {
+             templateId: template.id,
+            });
+            router.push(`/dashboard/automation/workflows/${template.id}/edit`);
+           }}
+          >
+           <Edit2 className="h-4 w-4" />
+          </Button>
+          <Button
+           variant="ghost"
+           size="icon"
+           onClick={() => {
+            monitoringService.trackEvent('delete_workflow_clicked', {
+             templateId: template.id,
+            });
+            handleDelete(template.id);
+           }}
+          >
+           <Trash2 className="h-4 w-4" />
+          </Button>
+         </div>
+        </CardTitle>
+       </CardHeader>
+       <CardContent>
+        <p className="text-sm text-muted-foreground">{template.description}</p>
+        <div className="mt-4 flex items-center space-x-2">
+         <Badge variant="outline">{template.type}</Badge>
+         <span className="text-xs text-muted-foreground">
+          Steps: {template.steps?.length || 0}
+         </span>
+        </div>
+       </CardContent>
+      </Card>
+     ))}
+    </div>
+   )}
   </div>
  );
 } 

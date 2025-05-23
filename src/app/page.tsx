@@ -73,6 +73,20 @@ export default function HomePage() {
       ]
     },
     {
+      title: "Integrations Hub",
+      description: "Connect and manage all your favorite tools and services in one place with seamless integration",
+      icon: Zap,
+      href: "/dashboard/integrations",
+      benefits: [
+        "One-click connections",
+        "Popular service integrations",
+        "Custom workflow automation",
+        "Real-time sync",
+        "Centralized management",
+        "Security controls"
+      ]
+    },
+    {
       title: "AI Command Center",
       description: "Natural language interface for managing your business operations with advanced AI capabilities",
       icon: MessageSquare,

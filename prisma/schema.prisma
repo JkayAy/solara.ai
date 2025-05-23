@@ -35,6 +35,10 @@ model Profile {
   timeEntries  TimeEntry[]
   invoices     Invoice[]
   payments     Payment[]
+  automationRules    AutomationRule[]
+  workflowTemplates  WorkflowTemplate[]
+  aiModels          AIModel[]
+  aiTrainingData    AITrainingData[]
 }
 
 // User settings and preferences
@@ -228,4 +232,66 @@ model Payment {
   profile     Profile  @relation(fields: [profileId], references: [id], onDelete: Cascade)
   invoiceId   String
   invoice     Invoice  @relation(fields: [invoiceId], references: [id], onDelete: Cascade)
+}
+
+// Automation Rules
+model AutomationRule {
+  id        String   @id @default(cuid())
+  name      String
+  trigger   Json
+  actions   Json
+  status    String   @default("active")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  profileId String
+  profile   Profile  @relation(fields: [profileId], references: [id], onDelete: Cascade)
+}
+
+// Workflow Templates
+model WorkflowTemplate {
+  id          String   @id @default(cuid())
+  name        String
+  description String
+  steps       Json
+  category    String
+  tags        String[]
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relations
+  profileId   String
+  profile     Profile  @relation(fields: [profileId], references: [id], onDelete: Cascade)
+}
+
+// AI Models
+model AIModel {
+  id          String   @id @default(cuid())
+  name        String
+  type        String
+  parameters  Json
+  status      String   @default("active")
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relations
+  profileId   String
+  profile     Profile  @relation(fields: [profileId], references: [id], onDelete: Cascade)
+}
+
+// AI Training Data
+model AITrainingData {
+  id          String   @id @default(cuid())
+  type        String
+  data        Json
+  metadata    Json?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relations
+  profileId   String
+  profile     Profile  @relation(fields: [profileId], references: [id], onDelete: Cascade)
+  modelId     String?
+  model       AIModel? @relation(fields: [modelId], references: [id], onDelete: SetNull)
 } 

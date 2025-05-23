@@ -2,35 +2,50 @@
 
 import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
-import { Handshake, Star, Users, ArrowRight, Mail } from "lucide-react";
+import { Handshake, Users, Award, Globe } from "lucide-react";
 import { motion } from "framer-motion";
 
 export default function PartnersPage() {
- const partnershipTypes = [
+ const benefits = [
   {
    icon: Handshake,
-   title: "Technology Partners",
-   description: "Integrate our AI solutions into your platform and create powerful synergies"
+   title: "Strategic Partnership",
+   description: "Join our network of industry leaders and innovators"
   },
   {
    icon: Users,
-   title: "Channel Partners",
-   description: "Resell our solutions and provide value-added services to your customers"
+   title: "Community Access",
+   description: "Connect with our global community of developers and businesses"
   },
   {
-   icon: Star,
-   title: "Strategic Partners",
-   description: "Collaborate on joint initiatives and co-create innovative solutions"
+   icon: Award,
+   title: "Exclusive Benefits",
+   description: "Get access to premium features and early product releases"
+  },
+  {
+   icon: Globe,
+   title: "Global Reach",
+   description: "Expand your market presence with our international network"
   }
  ];
 
- const benefits = [
-  "Access to cutting-edge AI technology",
-  "Dedicated partner support team",
-  "Marketing and sales enablement",
-  "Revenue sharing opportunities",
-  "Technical training and certification",
-  "Joint go-to-market strategies"
+ const partnerTypes = [
+  {
+   title: "Technology Partners",
+   description: "Integrate your technology with our platform"
+  },
+  {
+   title: "Solution Partners",
+   description: "Build and deliver custom solutions"
+  },
+  {
+   title: "Channel Partners",
+   description: "Resell and distribute our products"
+  },
+  {
+   title: "Strategic Partners",
+   description: "Collaborate on joint initiatives and innovations"
+  }
  ];
 
  return (
@@ -45,57 +60,54 @@ export default function PartnersPage() {
         Partner With Us
        </h1>
        <p className="text-xl text-muted-foreground mb-8">
-        Join our ecosystem and grow your business with AI-powered solutions
+        Join our ecosystem of innovative partners and grow together
        </p>
       </div>
      </div>
     </section>
 
-    {/* Partnership Types Section */}
+    {/* Benefits Section */}
     <section className="py-20 bg-background">
      <div className="container">
-      <h2 className="text-3xl font-bold text-center mb-12">Partnership Opportunities</h2>
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-       {partnershipTypes.map((type) => (
+      <h2 className="text-3xl font-bold text-center mb-12">Partner Benefits</h2>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+       {benefits.map((benefit) => (
         <motion.div
-         key={type.title}
+         key={benefit.title}
          initial={{ opacity: 0, y: 20 }}
          whileInView={{ opacity: 1, y: 0 }}
          viewport={{ once: true }}
          className="p-6 rounded-lg border bg-card"
         >
-         <type.icon className="w-12 h-12 text-primary mb-4" />
-         <h3 className="text-xl font-semibold mb-2">{type.title}</h3>
-         <p className="text-muted-foreground mb-4">{type.description}</p>
-         <button className="text-primary hover:text-primary/80 transition-colors inline-flex items-center">
-          Learn More
-          <ArrowRight className="ml-2 w-4 h-4" />
-         </button>
+         <benefit.icon className="w-12 h-12 text-primary mb-4" />
+         <h3 className="text-xl font-semibold mb-2">{benefit.title}</h3>
+         <p className="text-muted-foreground">{benefit.description}</p>
         </motion.div>
        ))}
       </div>
      </div>
     </section>
 
-    {/* Benefits Section */}
+    {/* Partner Types Section */}
     <section className="py-20 bg-muted/50">
      <div className="container">
-      <div className="max-w-3xl mx-auto">
-       <h2 className="text-3xl font-bold text-center mb-12">Partner Benefits</h2>
-       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        {benefits.map((benefit) => (
-         <motion.div
-          key={benefit}
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          className="flex items-start gap-3 p-4 rounded-lg border bg-card"
-         >
-          <Star className="w-5 h-5 text-primary mt-1" />
-          <span>{benefit}</span>
-         </motion.div>
-        ))}
-       </div>
+      <h2 className="text-3xl font-bold text-center mb-12">Partner Programs</h2>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+       {partnerTypes.map((type) => (
+        <motion.div
+         key={type.title}
+         initial={{ opacity: 0, y: 20 }}
+         whileInView={{ opacity: 1, y: 0 }}
+         viewport={{ once: true }}
+         className="p-8 rounded-lg border bg-card"
+        >
+         <h3 className="text-2xl font-semibold mb-4">{type.title}</h3>
+         <p className="text-muted-foreground mb-6">{type.description}</p>
+         <button className="inline-flex items-center px-6 py-3 rounded-lg bg-primary text-primary-foreground hover:bg-primary/90 transition-colors">
+          Learn More
+         </button>
+        </motion.div>
+       ))}
       </div>
      </div>
     </section>
@@ -106,11 +118,11 @@ export default function PartnersPage() {
       <div className="max-w-3xl mx-auto text-center">
        <h2 className="text-3xl font-bold mb-6">Ready to Partner With Us?</h2>
        <p className="text-muted-foreground mb-8">
-        Join our growing network of partners and unlock new opportunities
+        Join our partner program and start growing your business today
        </p>
        <button className="inline-flex items-center px-6 py-3 rounded-lg bg-primary text-primary-foreground hover:bg-primary/90 transition-colors">
-        Contact Partnership Team
-        <Mail className="ml-2 w-4 h-4" />
+        Become a Partner
+        <Handshake className="ml-2 w-4 h-4" />
        </button>
       </div>
      </div>
