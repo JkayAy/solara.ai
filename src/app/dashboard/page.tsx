@@ -119,8 +119,8 @@ export default function DashboardPage() {
     },
     {
       id: 2,
-      name: 'Website Builder',
-      description: 'Create stunning websites instantly',
+      name: 'Digital Presence',
+      description: 'Create and manage your digital presence with our powerful tools',
       icon: GlobeAltIcon,
       link: '/dashboard/website-builder',
       tooltip: 'Generate professional websites with AI-powered templates and content',
@@ -254,7 +254,7 @@ export default function DashboardPage() {
     return acc;
   }, {});
 
- return (
+  return (
     <div className="space-y-6">
       <PageHeader
         title="Dashboard"
@@ -285,12 +285,12 @@ export default function DashboardPage() {
                 <ArrowTrendingUpIcon className="h-4 w-4" />
                 <span className="ml-1 text-sm font-medium">{stat.change}</span>
               </div>
-    </div>
-   </div>
+            </div>
+          </div>
         ))}
-    </div>
+      </div>
 
-     {/* Quick Actions */}
+      {/* Quick Actions */}
       <div className="bg-white rounded-lg shadow-sm overflow-hidden">
         <div className="p-6">
           <h2 className="text-lg font-medium text-gray-900 mb-6">Quick Actions</h2>
@@ -314,22 +314,22 @@ export default function DashboardPage() {
                               {action.name}
                             </h3>
                             <p className="mt-1 text-sm text-gray-500">{action.description}</p>
-         </div>
-        </div>
+                          </div>
+                        </div>
                       </Link>
                     </Tooltip>
                   ))}
-         </div>
-        </div>
+                </div>
+              </div>
             ))}
-         </div>
+          </div>
         </div>
-     </div>
+      </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Recent Activity and Security Alerts */}
         <div className="lg:col-span-2 space-y-6">
-     {/* Recent Activity */}
+          {/* Recent Activity */}
           <div className="bg-white rounded-lg shadow-sm overflow-hidden">
             <div className="p-6">
               <div className="flex items-center justify-between mb-4">
@@ -341,7 +341,7 @@ export default function DashboardPage() {
                   View All
                 </a>
               </div>
-        <div className="space-y-4">
+              <div className="space-y-4">
                 {recentActivity.map((activity) => (
                   <div
                     key={activity.id}
@@ -414,8 +414,8 @@ export default function DashboardPage() {
                               : 'text-blue-600'
                             }`}
                         />
-          </div>
-          <div>
+                      </div>
+                      <div>
                         <p className="text-sm font-medium text-gray-900">{alert.type}</p>
                         <p className="text-sm text-gray-500">{alert.description}</p>
                       </div>
@@ -426,8 +426,8 @@ export default function DashboardPage() {
               </div>
             </div>
           </div>
-         </div>
         </div>
+      </div>
 
       {/* System Health */}
       <div className="bg-white rounded-lg shadow-sm overflow-hidden">
@@ -478,9 +478,9 @@ export default function DashboardPage() {
                 </div>
               </div>
             </div>
-         </div>
-         </div>
-     </div>
-  </div>
- );
+          </div>
+        </div>
+      </div>
+    </div>
+  );
 } 

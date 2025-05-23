@@ -210,7 +210,7 @@ export default function WebsiteBuilderPage() {
   return (
     <div className="space-y-6">
       <PageHeader
-        title="Website Builder"
+        title="Digital Presence"
         description="Create and customize your website with our AI-powered builder"
       />
 
